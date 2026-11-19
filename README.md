@@ -2,6 +2,8 @@
 
 Jogo de juntar aviões: compre aviões, faça-os voar para ganhar moedas e junte dois iguais para criar um avião melhor. São 40 aviões para descobrir.
 
+**Jogar:** <https://alex624-624.github.io/airplane-merge-do-alex/>
+
 Funciona no navegador do computador e do celular, com conta (usuário e senha) e progresso salvo na nuvem.
 
 ## Como jogar
