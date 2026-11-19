@@ -1,0 +1,15 @@
+{
+  "name": "Airplane Merge do Alex",
+  "short_name": "Airplane Merge",
+  "description": "Junte aviões iguais, decole e conquiste os céus!",
+  "lang": "pt-BR",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#143063",
+  "theme_color": "#143063",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

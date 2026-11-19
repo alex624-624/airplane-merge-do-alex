@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com; base-uri 'none'; form-action 'self'">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <title>Airplane Merge do Alex</title>
+  <meta name="description" content="Junte aviões iguais, decole e conquiste os céus!">
+  <meta name="theme-color" content="#143063">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Airplane Merge">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="splash"><div class="spinner">✈️</div></div>
+
+  <!-- Login / cadastro -->
+  <section id="auth" hidden>
+    <div class="auth-card">
+      <canvas id="logo-planes" width="600" height="300" aria-hidden="true"></canvas>
+      <h1 class="logo"><span>Airplane Merge</span><em>do Alex</em></h1>
+      <p class="tagline">Junte aviões iguais, decole e conquiste os céus!</p>
+      <div class="tabs">
+        <button type="button" class="tab active" data-mode="login">Entrar</button>
+        <button type="button" class="tab" data-mode="register">Criar conta</button>
+      </div>
+      <form id="auth-form" novalidate>
+        <label>Nome de usuário
+          <input id="auth-user" name="username" type="text" maxlength="16" autocomplete="username"
+                 autocapitalize="none" autocorrect="off" spellcheck="false" required>
+        </label>
+        <label>Senha
+          <input id="auth-pass" name="password" type="password" maxlength="100" autocomplete="current-password" required>
+        </label>
+        <p id="auth-tip" class="tip" hidden>Seu progresso fica salvo na conta: jogue no computador e continue no celular.</p>
+        <p id="auth-error" class="error" role="alert" hidden></p>
+        <button id="auth-submit" class="btn big" type="submit">Entrar</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Jogo -->
+  <section id="game" hidden>
+    <header class="topbar">
+      <button id="btn-account" class="account" aria-label="Minha conta">
+        <span id="acc-avatar" class="avatar">A</span>
+        <span id="acc-name" class="acc-name"></span>
+      </button>
+      <div class="wallet">
+        <div class="coins"><i class="coin"></i><span id="coins">0</span></div>
+        <div class="rate"><span id="rate">0</span> moedas/s</div>
+      </div>
+      <button id="btn-sound" class="icon-btn" aria-label="Som">🔊</button>
+    </header>
+
+    <main class="playfield">
+      <div class="sky-wrap" id="sky-wrap">
+        <canvas id="sky"></canvas>
+        <div class="sky-hud">
+          <div class="pill" id="flight-count">✈️ 0/3</div>
+          <div class="pill warn" id="net-warn" hidden>Sem conexão — tentando salvar…</div>
+          <button id="btn-boost" class="boost-btn ready">⚡ Turbo x2</button>
+        </div>
+        <div class="drop-hint">Solte aqui para decolar</div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <b>Hangar</b>
+          <span id="hint"></span>
+        </div>
+        <div class="hangar" id="hangar"></div>
+        <div class="actions">
+          <button id="btn-buy" class="buy-btn">
+            <img id="buy-img" alt="" draggable="false">
+            <span class="buy-text"><small>Comprar</small><b id="buy-name"></b></span>
+            <span class="buy-price"><i class="coin"></i><span id="buy-price">0</span></span>
+          </button>
+          <div id="trash" class="trash">🗑️ Solte para vender · <i class="coin"></i><span id="trash-value">0</span></div>
+        </div>
+        <nav class="nav">
+          <button data-open="shop"><span class="ico">🛒</span>Loja</button>
+          <button data-open="upgrades"><span class="ico">🚀</span>Melhorias</button>
+          <button data-open="album"><span class="ico">📖</span>Álbum</button>
+          <button data-open="ranking"><span class="ico">🏆</span>Ranking</button>
+        </nav>
+      </div>
+    </main>
+  </section>
+
+  <div id="modal-root"></div>
+  <div id="toasts" aria-live="polite"></div>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

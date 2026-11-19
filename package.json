@@ -1,0 +1,13 @@
+{
+  "name": "airplane-merge-do-alex",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Airplane Merge do Alex — jogo de fundir aviões, com contas, para computador e celular.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=22.13"
+  }
+}
