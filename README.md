@@ -4,7 +4,7 @@ Jogo de juntar aviões: compre aviões, faça-os voar para ganhar moedas e junte
 
 **Jogar:** <https://alex624-624.github.io/airplane-merge-do-alex/>
 
-Funciona no navegador do computador e do celular, com conta (usuário e senha) e progresso salvo na nuvem.
+Funciona no navegador do computador e do celular, com conta (usuário e senha).
 
 ## Como jogar
 
@@ -17,31 +17,23 @@ Funciona no navegador do computador e do celular, com conta (usuário e senha) e
 - **Turbo**: moedas em dobro por 1 minuto.
 - No computador, a barra de espaço (ou a tecla B) também compra.
 
-## Como o site funciona
+## Contas
 
-| Parte | Onde fica | Custo |
-| --- | --- | --- |
-| O site (pasta `docs/`) | GitHub Pages | grátis |
-| Contas (usuário e senha) | Firebase Authentication | grátis |
-| Progresso e ranking | Firebase Firestore | grátis (plano Spark) |
+O site é feito só de arquivos estáticos, publicado de graça no GitHub Pages. Não há servidor nem serviço externo: **as contas e o progresso ficam guardados no próprio aparelho**, dentro do navegador.
 
-O site é feito só de arquivos estáticos e fala direto com o Firebase. Não há servidor para manter.
+Na prática:
 
-## Configurar o Firebase (uma vez)
+- Cada aparelho (e cada navegador) tem as suas contas. Uma conta criada no computador não existe no celular.
+- Várias pessoas podem ter contas no mesmo aparelho. O Ranking mostra as contas daquele aparelho.
+- Para continuar o jogo em outro aparelho, use o **código de transferência**: no menu da conta, "Levar para outro aparelho" gera um código; no outro aparelho, crie uma conta e use "Trazer de outro aparelho" para colar o código.
+- O código também serve como **cópia de segurança**. Vale guardar um de vez em quando: se os dados do navegador forem apagados, as contas daquele aparelho somem. Isso acontece ao limpar o histórico, ao usar o modo anônimo, e o iPhone pode apagar sozinho os dados de sites que ficam um tempo sem ser abertos.
+- Não existe "esqueci minha senha".
 
-1. Em <https://console.firebase.google.com>, crie um projeto (o Google Analytics pode ficar desligado).
-2. **Authentication → Método de login**: ative **E-mail/senha**.
-3. **Firestore Database → Criar banco de dados**: escolha a região (por exemplo `southamerica-east1`, São Paulo) e o modo de produção.
-4. **Firestore Database → Regras**: cole o conteúdo de [`firestore.rules`](firestore.rules) e publique.
-5. **Configurações do projeto → Seus apps → Web (`</>`)**: registre um app e copie `apiKey` e `projectId` para [`docs/js/firebase-config.js`](docs/js/firebase-config.js).
+A senha não é guardada, só um embaralhado dela. Ela impede que outra pessoa entre na sua conta pelo jogo, mas não é um cofre: quem souber usar as ferramentas do navegador consegue ver ou apagar os dados guardados no aparelho.
 
-Esses dois valores não são segredos — todo site que usa o Firebase os mostra. Quem protege os dados são as regras do passo 4: cada jogador só lê e grava o próprio progresso, e o ranking só aceita a linha do próprio jogador, com o nome da própria conta.
+## Publicar
 
-O jogo pede um nome de usuário, não um e-mail. Por dentro, o nome vira um endereço interno (`nome@pilotos.example.com`) só para o Firebase aceitar o login; nenhum e-mail é enviado. Por isso **não existe "esqueci minha senha"**: quem perder a senha precisa criar outra conta.
-
-## Publicar no GitHub Pages
-
-O GitHub Pages publica a pasta `docs/` do ramo `main`. Depois de configurado (Settings → Pages → *Deploy from a branch* → `main` / `docs`), basta enviar as mudanças:
+O GitHub Pages publica a pasta `docs/` do ramo `main`. Para atualizar o site, basta enviar as mudanças:
 
 ```bash
 git add -A && git commit -m "Atualiza o jogo" && git push
@@ -49,28 +41,23 @@ git add -A && git commit -m "Atualiza o jogo" && git push
 
 O site atualiza sozinho em um ou dois minutos.
 
-## Limites do plano gratuito
+## Rodar no computador (opcional)
 
-O plano Spark do Firebase permite, por dia, cerca de 20 mil gravações e 50 mil leituras no Firestore. O jogo salva a cada 30 segundos enquanto está aberto (e ao fechar a aba), o que dá por volta de 150 horas de jogo somadas por dia entre todos os jogadores. Se o limite acabar, o jogo avisa e volta a salvar no dia seguinte; nada é cobrado.
-
-## Rodar no computador
-
-Precisa só do [Node.js](https://nodejs.org) 22.13 ou mais novo. Não há nada para instalar.
+Existe também um servidor próprio, que guarda as contas num banco de dados em vez de no navegador. Com ele, a mesma conta vale em todos os aparelhos ligados ao mesmo Wi-Fi. Precisa só do [Node.js](https://nodejs.org) 22.13 ou mais novo; não há nada para instalar.
 
 ```bash
 npm start
 ```
 
-Depois abra `http://localhost:3000`. Para testar no celular, conecte-o ao mesmo Wi-Fi e abra o endereço "No celular" que aparece no terminal.
+Depois abra `http://localhost:3000`. No celular, conecte-se ao mesmo Wi-Fi e abra o endereço "No celular" que aparece no terminal.
 
-- Com o Firebase configurado, o jogo local usa as mesmas contas do site publicado.
-- Com `FIREBASE = null` em `docs/js/firebase-config.js`, o jogo usa o servidor local: as contas ficam em `data/jogo.db` (SQLite, senhas guardadas só como hash) e valem apenas neste computador.
+As contas do servidor ficam em `data/jogo.db` (SQLite, senhas guardadas só como hash) e são separadas das contas do site publicado.
 
 | Variável | Padrão | Para quê |
 | --- | --- | --- |
 | `PORT` | `3000` | Porta do site |
 | `HOST` | `0.0.0.0` | Use `127.0.0.1` para aceitar só este computador |
-| `DATA_DIR` | `./data` | Pasta do banco de dados local |
+| `DATA_DIR` | `./data` | Pasta do banco de dados |
 | `TRUST_PROXY` | — | `1` se o servidor estiver atrás de um proxy com HTTPS |
 | `CLIENT_IP_HEADER` | — | Cabeçalho em que o proxy informa o IP do visitante |
 
@@ -81,8 +68,7 @@ Depois abra `http://localhost:3000`. Para testar no celular, conecte-o ao mesmo 
   - `js/planes.js` — desenho dos aviões
   - `js/sky.js` — o céu e a rota de voo
   - `js/game.js` — o jogo (hangar, loja, janelas)
-  - `js/firebase-config.js` — dados do projeto Firebase
-  - `js/backend-firebase.js` — contas, progresso e ranking no Firebase
-  - `js/backend-server.js` — o mesmo, usando o servidor local
-- `firestore.rules` — regras de segurança do banco
+  - `js/backend-local.js` — contas guardadas no aparelho
+  - `js/transfer.js` — código de transferência
+  - `js/backend-server.js` e `js/modo.js` — contas no servidor local, quando ele é usado
 - `server.js` — servidor local (opcional)

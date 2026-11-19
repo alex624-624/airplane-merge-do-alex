@@ -47,6 +47,9 @@ async function enter(user) {
 }
 
 function showAuth(message) {
+  if (api.local) {
+    $('auth-tip').textContent = 'Sua conta fica guardada neste aparelho. Para jogar em outro, use o código de transferência no menu da conta.';
+  }
   $('splash').hidden = true;
   $('auth').hidden = false;
   drawLogo();

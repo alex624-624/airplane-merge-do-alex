@@ -4,9 +4,9 @@
  * Sem dependências: usa apenas módulos nativos do Node (http, sqlite, crypto).
  * Rodar:  node server.js   (Node 22.13 ou mais novo)
  *
- * Serve a pasta docs/ (o site). As contas daqui (SQLite) só são usadas quando
- * docs/js/firebase-config.js está vazio; com o Firebase configurado, o site fala
- * direto com o Firebase e este servidor apenas entrega os arquivos.
+ * Serve a pasta docs/ (o site) e guarda as contas num banco SQLite.
+ * O site publicado no GitHub Pages não usa este servidor: lá as contas ficam
+ * em cada aparelho. Quem avisa o site de que o servidor existe é /js/modo.js.
  */
 const http = require('node:http');
 const fs = require('node:fs');
@@ -77,8 +77,7 @@ const SECURITY_HEADERS = {
   'X-Frame-Options': 'SAMEORIGIN',
   'Content-Security-Policy':
     "default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; " +
-    "connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com; " +
-    "base-uri 'none'; form-action 'self'; frame-ancestors 'self'",
+    "connect-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'self'",
 };
 
 function send(res, status, body, headers = {}) {
@@ -387,6 +386,9 @@ function serveStatic(req, res, url) {
   let rel;
   try { rel = decodeURIComponent(url.pathname); } catch { return send(res, 400, { error: 'Endereço inválido.' }); }
   if (rel === '/') rel = '/index.html';
+  if (rel === '/js/modo.js') { // avisa o site de que aqui as contas ficam no servidor
+    return send(res, 200, req.method === 'HEAD' ? '' : 'export const SERVIDOR = true;\n', { 'Content-Type': MIME['.js'] });
+  }
   const file = path.normalize(path.join(PUBLIC_DIR, rel));
   if (!file.startsWith(PUBLIC_DIR + path.sep)) return send(res, 404, { error: 'Não encontrado.' });
   fs.stat(file, (err, stat) => {

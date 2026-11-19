@@ -17,9 +17,7 @@ async function call(method, url, body) {
   let data = null;
   try { data = await res.json(); } catch { /* resposta sem JSON */ }
   if (!res.ok) {
-    // site publicado sem o Firebase configurado: não existe servidor de contas para responder
-    const missing = !data && (res.status === 404 || res.status === 405);
-    const err = new Error((data && data.error) || (missing ? 'As contas ainda não foram configuradas neste site.' : 'Algo deu errado. Tente de novo.'));
+    const err = new Error((data && data.error) || 'Algo deu errado. Tente de novo.');
     err.status = res.status;
     throw err;
   }

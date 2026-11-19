@@ -6,6 +6,7 @@ import {
 } from './config.js';
 import { planeURL } from './planes.js';
 import { api } from './api.js';
+import { makeCode, readCode } from './transfer.js';
 import { sfx, isMuted, setMuted } from './audio.js';
 import { Sky } from './sky.js';
 
@@ -683,7 +684,7 @@ function rankRow(pos, r, mine) {
 
 async function openRanking() {
   const box = h('div', { class: 'list' }, h('p', { class: 'muted', text: 'Carregando…' }));
-  openModal({ title: 'Ranking dos pilotos', content: box });
+  openModal({ title: api.local ? 'Ranking deste aparelho' : 'Ranking dos pilotos', content: box });
   await saveNow();
   try {
     const { top, me } = await api.ranking();
@@ -718,6 +719,8 @@ function openAccount() {
         stat('Total ganho', fmt(S.total))),
       h('button', { class: 'btn ghost', onclick: () => { m.close(); showTutorial(); } }, '❓ Como jogar'),
       soundBtn,
+      api.local && h('button', { class: 'btn ghost', onclick: () => { m.close(); openSendCode(); } }, '📤 Levar para outro aparelho'),
+      api.local && h('button', { class: 'btn ghost', onclick: () => { m.close(); openUseCode(); } }, '📥 Trazer de outro aparelho'),
       h('button', {
         class: 'btn danger',
         onclick: async () => {
@@ -726,6 +729,70 @@ function openAccount() {
           location.reload();
         },
       }, '🚪 Sair da conta')),
+  });
+}
+
+// ------------------------------------------------------------------ código de transferência
+function openSendCode() {
+  const code = makeCode(snapshot());
+  const box = h('textarea', { class: 'code-box', readonly: true, rows: '5', 'aria-label': 'Código de transferência' });
+  box.value = code;
+  box.addEventListener('focus', () => box.select());
+  const copy = h('button', {
+    class: 'btn big',
+    onclick: async () => {
+      let ok = false;
+      try { await navigator.clipboard.writeText(code); ok = true; } catch { /* tenta do jeito antigo */ }
+      if (!ok) {
+        box.focus();
+        box.select();
+        try { ok = document.execCommand('copy'); } catch { ok = false; }
+      }
+      toast(ok ? 'Código copiado!' : 'Selecione o texto e copie.');
+    },
+  }, '📋 Copiar código');
+  openModal({
+    title: 'Levar para outro aparelho',
+    cls: 'center',
+    content: h('div', { class: 'msg' },
+      h('p', { text: 'Este código guarda todo o seu progresso de agora. Copie, mande para você mesmo (por mensagem ou e-mail) e, no outro aparelho, entre no jogo e use "Trazer de outro aparelho".' }),
+      box,
+      copy,
+      h('p', { class: 'fine', text: 'Também serve como cópia de segurança. Quem tiver o código consegue copiar o seu progresso.' })),
+  });
+}
+
+function openUseCode() {
+  const box = h('textarea', { class: 'code-box', rows: '5', placeholder: 'Cole o código aqui', 'aria-label': 'Código de transferência', spellcheck: 'false', autocapitalize: 'none', autocomplete: 'off' });
+  const err = h('p', { class: 'error', hidden: true, role: 'alert' });
+  const m = openModal({
+    title: 'Trazer de outro aparelho',
+    cls: 'center',
+    content: h('div', { class: 'msg' },
+      h('p', { text: 'Cole o código copiado no outro aparelho. O progresso desta conta aqui será trocado pelo do código.' }),
+      box,
+      err,
+      h('button', {
+        class: 'btn big',
+        onclick: () => {
+          const save = readCode(box.value);
+          if (!save) {
+            err.textContent = 'Esse código não é válido. Copie de novo, inteiro.';
+            err.hidden = false;
+            return;
+          }
+          err.hidden = true;
+          const incoming = normalize(save);
+          confirmDialog('Trocar o progresso?',
+            `O jogo desta conta (melhor avião: ${NAMES[S.best]}) será substituído pelo do código (melhor avião: ${NAMES[incoming.best]}).`,
+            'Trocar', async () => {
+              m.close();
+              S = incoming;
+              await saveNow();
+              location.reload();
+            });
+        },
+      }, 'Usar este código')),
   });
 }
 
