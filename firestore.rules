@@ -1,0 +1,37 @@
+rules_version = '2';
+
+// Regras do ranking online do Airplane Merge do Alex.
+// Cole este texto em: Firebase → Firestore Database → Regras → Publicar.
+//
+// O banco guarda só uma linha por conta: nome, melhor avião e total ganho.
+// Qualquer aparelho com o jogo aberto lê o ranking; cada aparelho só altera as linhas que ele mesmo criou.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function valid(d) {
+      return d.keys().hasAll(['name', 'best', 'total', 'score', 'owner'])
+        && d.keys().hasOnly(['name', 'best', 'total', 'score', 'owner'])
+        && d.name is string
+        && d.name.matches('^[A-Za-z0-9_-]{3,16}$')
+        && d.best is int
+        && d.best >= 1
+        && d.best <= 100
+        && d.total is number
+        && d.total >= 0
+        && d.score is number
+        && d.score >= d.best
+        && d.score < d.best + 1
+        && d.owner == request.auth.uid;
+    }
+
+    match /ranking/{id} {
+      allow get, list: if request.auth != null;
+      allow create: if request.auth != null
+        && id.matches('^[A-Za-z0-9]{16,40}$')
+        && valid(request.resource.data);
+      allow update: if request.auth != null
+        && resource.data.owner == request.auth.uid
+        && valid(request.resource.data);
+    }
+  }
+}

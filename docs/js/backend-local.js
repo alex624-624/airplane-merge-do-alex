@@ -5,7 +5,12 @@
 // Ela impede que outra pessoa entre na conta pelo jogo, mas quem mexe nas
 // ferramentas do navegador consegue ver ou apagar os dados — não é um cofre.
 
+import { FIREBASE } from './firebase-config.js';
+import { onlineRanking } from './ranking-online.js';
+
 const PREFIX = 'amda_conta:';
+// ranking de todos os jogadores (só existe quando o projeto Firebase está configurado)
+const online = FIREBASE && FIREBASE.apiKey && FIREBASE.projectId ? onlineRanking(FIREBASE) : null;
 const CURRENT = 'amda_atual';
 const USER_RE = /^[A-Za-z0-9_-]{3,16}$/;
 const ROUNDS = 150000;
@@ -91,10 +96,18 @@ function store(epoch, save) {
   account.save = save;
   account.savedAt = Date.now();
   write(id, account);
+  if (online) online.publish([lineOf(account)]).catch(() => {});
   return { ok: true, now: account.savedAt };
 }
 
 const rankOf = (a) => ({ name: a.name, best: Math.round(Number(a.save && a.save.best)) || 1, total: Number(a.save && a.save.total) || 0 });
+// linha da conta no ranking online; o "sal" da conta é aleatório e nunca muda, então serve de identificador
+const lineOf = (a) => ({ rid: a.salt, ...rankOf(a) });
+
+// manda para o ranking online todas as contas deste aparelho (sem travar o jogo se a internet falhar)
+function publishAll(force) {
+  return online ? online.publish(everyone().map(lineOf), force).catch(() => {}) : Promise.resolve();
+}
 
 export const localApi = {
   local: true,
@@ -137,6 +150,7 @@ export const localApi = {
     const { id, account } = signedIn();
     account.epoch = (Number(account.epoch) || 0) + 1;
     write(id, account);
+    publishAll(false);
     return { user: { name: account.name }, save: account.save || null, savedAt: account.savedAt || null, now: Date.now(), epoch: account.epoch };
   },
 
@@ -154,12 +168,20 @@ export const localApi = {
     }
   },
 
-  // ranking entre as contas deste aparelho
+  // Ranking de todos os jogadores, quando o ranking online está ligado e há internet;
+  // senão, ranking entre as contas deste aparelho.
   async ranking() {
     const { account } = signedIn();
+    if (online) {
+      try {
+        await online.publish(everyone().map(lineOf), true);
+        const all = await online.top(account.salt);
+        return { ...all, scope: 'todos' };
+      } catch { /* sem internet ou serviço fora do ar: mostra o do aparelho */ }
+    }
     const rows = everyone().map(rankOf) // todas as contas deste aparelho, mesmo as que mal jogaram
       .sort((a, b) => b.best - a.best || b.total - a.total || a.name.localeCompare(b.name));
     const i = rows.findIndex((r) => r.name === account.name);
-    return { top: rows.slice(0, 20), me: i >= 0 ? { ...rows[i], rank: i + 1 } : null };
+    return { top: rows.slice(0, 100), me: i >= 0 ? { ...rows[i], rank: i + 1 } : null, scope: online ? 'sem-internet' : 'aparelho' };
   },
 };

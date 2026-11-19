@@ -19,7 +19,7 @@ Funciona no navegador do computador e do celular, com conta (usuário e senha).
 
 ## Contas
 
-O site é feito só de arquivos estáticos, publicado de graça no GitHub Pages. Não há servidor nem serviço externo: **as contas e o progresso ficam guardados no próprio aparelho**, dentro do navegador.
+O site é feito só de arquivos estáticos, publicado de graça no GitHub Pages. Não há servidor: **as contas e o progresso ficam guardados no próprio aparelho**, dentro do navegador.
 
 Na prática:
 
@@ -30,6 +30,20 @@ Na prática:
 - Não existe "esqueci minha senha".
 
 A senha não é guardada, só um embaralhado dela. Ela impede que outra pessoa entre na sua conta pelo jogo, mas não é um cofre: quem souber usar as ferramentas do navegador consegue ver ou apagar os dados guardados no aparelho.
+
+## Ranking de todos os jogadores (opcional)
+
+Sem configuração, o Ranking mostra só as contas do aparelho. Para mostrar os jogadores de todos os aparelhos, o jogo usa um projeto gratuito do Firebase que guarda **apenas uma linha por conta**: nome, melhor avião e total ganho. Senhas e progresso continuam no aparelho.
+
+O projeto precisa ser criado por um adulto, com a própria conta Google:
+
+1. Em <https://console.firebase.google.com>, crie um projeto (o Google Analytics pode ficar desligado).
+2. **Authentication → Método de login**: ative **Anônimo**.
+3. **Firestore Database → Criar banco de dados**: região `southamerica-east1` (São Paulo), modo de produção.
+4. **Firestore Database → Regras**: troque o texto pelo conteúdo de [`firestore.rules`](firestore.rules) e publique.
+5. **Configurações do projeto → Seus apps → Web (`</>`)**: registre um app e copie `apiKey` e `projectId` para [`docs/js/firebase-config.js`](docs/js/firebase-config.js).
+
+Esses dois valores não são segredos. Depois de publicado, cada aparelho envia as suas contas na próxima vez que o jogo for aberto nele. Sem internet, o Ranking volta a mostrar só as contas do aparelho.
 
 ## Publicar
 
@@ -89,7 +103,9 @@ As contas do servidor ficam em `data/jogo.db` (SQLite, senhas guardadas só como
   - `js/game.js` — o jogo (hangar, loja, janelas)
   - `js/backend-local.js` — contas guardadas no aparelho
   - `js/transfer.js` — código de transferência
+  - `js/ranking-online.js` e `js/firebase-config.js` — ranking de todos os jogadores (Firebase)
   - `sw.js` e `js/atualiza.js` — versão guardada no aparelho e troca de versão no carregamento
   - `js/backend-server.js` e `js/modo.js` — contas no servidor local, quando ele é usado
 - `tools/versao.js` e `.githooks/` — atualizam a lista de arquivos em `docs/sw.js` a cada commit
+- `firestore.rules` — regras de segurança do ranking online
 - `server.js` — servidor local (opcional)

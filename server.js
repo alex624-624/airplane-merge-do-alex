@@ -77,7 +77,7 @@ const SECURITY_HEADERS = {
   'X-Frame-Options': 'SAMEORIGIN',
   'Content-Security-Policy':
     "default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; " +
-    "connect-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'self'",
+    "connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com; base-uri 'none'; form-action 'self'; frame-ancestors 'self'",
 };
 
 function send(res, status, body, headers = {}) {

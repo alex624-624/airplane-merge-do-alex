@@ -685,13 +685,15 @@ function rankRow(pos, r, mine) {
 
 async function openRanking() {
   const box = h('div', { class: 'list' }, h('p', { class: 'muted', text: 'Carregando…' }));
-  openModal({ title: api.local ? 'Ranking deste aparelho' : 'Ranking dos pilotos', content: box });
+  openModal({ title: 'Ranking dos pilotos', content: box });
   await saveNow();
   try {
-    const { top, me } = await api.ranking();
+    const { top, me, scope } = await api.ranking();
     box.replaceChildren();
+    const note = { aparelho: 'Contas deste aparelho', 'sem-internet': 'Sem internet: mostrando só as contas deste aparelho', todos: 'Todos os pilotos' }[scope];
+    if (note) box.append(h('p', { class: 'muted small', text: note }));
     if (!top.length) box.append(h('p', { class: 'muted', text: 'Ninguém no ranking ainda.' }));
-    top.forEach((r, i) => box.append(rankRow(i + 1, r, !!me && r.name === me.name)));
+    top.forEach((r, i) => box.append(rankRow(i + 1, r, r.mine != null ? r.mine : !!me && r.name === me.name)));
     if (me && !(me.rank <= top.length)) box.append(h('p', { class: 'muted', text: '· · ·' }), rankRow(me.rank, me, true));
   } catch (e) {
     box.replaceChildren(h('p', { class: 'muted', text: e.message }));
