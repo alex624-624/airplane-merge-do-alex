@@ -45,7 +45,8 @@ export const eps = (L) => 2 * 2.05 ** (L - 1);            // moedas por segundo
 export const lapTime = (L) => Math.max(2.6, 6 - L * 0.085); // segundos por volta
 export const baseCost = (L) => 50 * 2.6 ** (L - 1);
 export const sellValue = (L) => Math.floor(baseCost(L) * 0.25);
-export const crateInterval = (n) => 30 - 2 * n;
+// segundos entre presentes: 30s → 10s nos 10 primeiros níveis, depois até 5s no nível 20
+export const crateInterval = (n) => (n <= 10 ? 30 - 2 * n : Math.max(5, 10 - 0.5 * (n - 10)));
 
 export const BOOST_MS = 60_000;
 export const BOOST_COOLDOWN_MS = 180_000;
@@ -55,8 +56,8 @@ export const UPGRADES = [
     label: 'Moedas por volta', val: (n) => `+${n * 10}%` },
   { id: 'discount', icon: '🏷️', name: 'Desconto na loja', max: 30, cost: (n) => 1500 * 3.2 ** n,
     label: 'Preço dos aviões', val: (n) => `-${n * 2}%` },
-  { id: 'crate', icon: '🎁', name: 'Entrega expressa', max: 10, cost: (n) => 4000 * 4 ** n,
-    label: 'Presente a cada', val: (n) => `${crateInterval(n)}s` },
+  { id: 'crate', icon: '🎁', name: 'Entrega expressa', max: 20, cost: (n) => 4000 * 4 ** n,
+    label: 'Presente a cada', val: (n) => `${String(crateInterval(n)).replace('.', ',')}s` },
   { id: 'offline', icon: '🌙', name: 'Piloto automático', max: 22, cost: (n) => 2500 * 3 ** n,
     label: 'Ganhos fora do jogo', val: (n) => `até ${2 + n}h` },
 ];

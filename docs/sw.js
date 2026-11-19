@@ -4,7 +4,7 @@
 // quando a página é carregada de novo (ver js/atualiza.js).
 
 // <versao> (bloco gerado por tools/versao.js — não edite à mão)
-const VERSION = '5634ebdf2f';
+const VERSION = '8432855093';
 const FILES = {
   "icon.svg": "5cc828b57ad188162a57533183e7523ad83c5d81b1f6f1d9303e9240a1e1496e",
   "./": "51c5a1ff203ed30f64ca731029d5ad796085a4735a089a4016840143bcb7b51b",
@@ -13,7 +13,7 @@ const FILES = {
   "js/audio.js": "34c9b4b89dfa14b76e4804b29cfed5fd204abfe8f21d78498c8190f8f715d278",
   "js/backend-local.js": "3f8b653e361fe858bc5e19b64846996154e135feb7270efdaaede0e9035e6a6f",
   "js/backend-server.js": "022eab4f159463417673f995bc9d134670e3eaa1778915fa677d18fc00c517e3",
-  "js/config.js": "b4269f5b406079cef4dbed2c60e98b12c84171a596a35fcae807e2229d10d7f8",
+  "js/config.js": "9869d9b59eb78c2c0f75b42b1eb4ea4239d480100583c06a36498e84d25df026",
   "js/firebase-config.js": "a14d992d1d9cab5f23c26060a2455a710c6ee12b0325c421bf68bb6551d1ff1f",
   "js/game.js": "2211261abddc3720fa3b250dfef74fb7b71fdd6ffcb65b093e99b5a4c4b0f5d8",
   "js/main.js": "8b8c9bed5b0b6d17a2864a723c6ca5c6a23a693b157742482e4dd09d4f3a32b4",
