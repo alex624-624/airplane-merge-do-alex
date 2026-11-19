@@ -678,3 +678,6 @@ body.dragging .buy-btn { visibility: hidden; }
 .code-box:focus { outline: 3px solid var(--accent); outline-offset: 1px; }
 .msg p.fine { font-size: 12px; font-weight: 600; }
 .msg p.error { color: var(--danger-d); }
+
+.version { margin: 2px 0 0; text-align: center; font-size: 11px; font-weight: 700; color: var(--ink-soft); opacity: .7; min-height: 14px; }
+.album .cname { overflow-wrap: anywhere; }

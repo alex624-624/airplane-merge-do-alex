@@ -1,0 +1,2 @@
+# os arquivos do site são publicados byte a byte; nada de converter fim de linha
+docs/** -text

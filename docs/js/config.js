@@ -1,11 +1,14 @@
 // Dados e regras de economia do jogo.
 
-export const MAX_LEVEL = 40;
+export const MAX_LEVEL = 100;
 export const SLOT_COUNT = 16;
 
 export const TIERS = [
   'Passarinhos', 'Insetos', 'Grandes aves', 'Ventos',
   'Nuvens', 'Tempestades', 'Sombras', 'Espaciais',
+  'Foguetes', 'Discos voadores', 'Drones', 'Arraias',
+  'Fogo', 'Gelo', 'Neon', 'Ouro',
+  'Cristais', 'Arco-íris', 'Galácticos', 'Lendas',
 ];
 
 export const NAMES = [
@@ -18,6 +21,18 @@ export const NAMES = [
   'Faísca', 'Raio', 'Trovão', 'Relâmpago', 'Tempestade',
   'Sombra', 'Fantasma', 'Eclipse', 'Meia-Noite', 'Vulto Supersônico',
   'Cometa', 'Meteoro', 'Nebulosa', 'Supernova', 'Galáxia do Alex',
+  'Rojão', 'Foguetinho', 'Lançador', 'Propulsor', 'Foguete Lunar',
+  'Pires Voador', 'OVNI', 'Disco Luminoso', 'Nave-Mãe', 'Abdutor',
+  'Zangão', 'Quadricóptero', 'Vigia', 'Enxame', 'Drone Alfa',
+  'Arraia', 'Jamanta', 'Raia Elétrica', 'Manta Azul', 'Arraia Imperial',
+  'Brasa', 'Chama', 'Labareda', 'Fênix', 'Vulcão',
+  'Geada', 'Floco de Neve', 'Nevasca', 'Iceberg', 'Aurora Polar',
+  'Pixel', 'Laser', 'Holograma', 'Circuito', 'Neon Máximo',
+  'Pepita', 'Moeda', 'Tesouro', 'Coroa', 'Jumbo de Ouro',
+  'Quartzo', 'Ametista', 'Safira', 'Esmeralda', 'Diamante',
+  'Garoa', 'Prisma', 'Aquarela', 'Arco-Íris', 'Aurora',
+  'Órbita', 'Satélite', 'Pulsar', 'Quasar', 'Buraco Negro',
+  'Pégaso', 'Grifo', 'Titã', 'Imortal', 'Lenda do Alex',
 ];
 
 // Nível do melhor avião necessário para liberar cada vaga do hangar.
@@ -46,7 +61,8 @@ export const UPGRADES = [
     label: 'Ganhos fora do jogo', val: (n) => `até ${2 + n}h` },
 ];
 
-const SUFFIXES = ['', 'K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No', 'Dc'];
+const SUFFIXES = ['', 'K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No', 'Dc',
+  'Ud', 'Dd', 'Td', 'Qad', 'Qid', 'Sxd', 'Spd', 'Ocd', 'Nod', 'Vg'];
 
 export function fmt(n) {
   if (!Number.isFinite(n)) return '∞';

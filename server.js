@@ -24,7 +24,7 @@ const TRUST_PROXY = process.env.TRUST_PROXY === '1';
 // Cabeçalho em que a hospedagem informa o IP real do visitante (ex.: fly-client-ip, cf-connecting-ip).
 const CLIENT_IP_HEADER = String(process.env.CLIENT_IP_HEADER || '').toLowerCase();
 
-const MAX_LEVEL = 40;
+const MAX_LEVEL = 100;
 const SLOT_COUNT = 16;
 const SESSION_MS = 30 * 24 * 3600 * 1000;
 const MAX_BODY = 64 * 1024;

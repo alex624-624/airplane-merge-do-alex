@@ -1,6 +1,6 @@
 # ✈️ Airplane Merge do Alex
 
-Jogo de juntar aviões: compre aviões, faça-os voar para ganhar moedas e junte dois iguais para criar um avião melhor. São 40 aviões para descobrir.
+Jogo de juntar aviões: compre aviões, faça-os voar para ganhar moedas e junte dois iguais para criar um avião melhor. São 100 aviões para descobrir, em 20 famílias.
 
 **Jogar:** <https://alex624-624.github.io/airplane-merge-do-alex/>
 
@@ -41,6 +41,25 @@ git add -A && git commit -m "Atualiza o jogo" && git push
 
 O site atualiza sozinho em um ou dois minutos.
 
+### Atualizar sem atrapalhar quem está jogando
+
+O jogo guarda no aparelho uma versão inteira de si mesmo (arquivo `docs/sw.js`). Por isso:
+
+- Quem está com o jogo aberto **continua na versão em que entrou**; nada muda no meio da partida.
+- A versão nova entra **quando a pessoa recarrega a página** (ou abre o jogo de novo). As contas e o progresso continuam lá.
+- O aparelho só troca de versão depois de baixar e conferir **todos** os arquivos. Se a publicação ainda estiver pela metade, ele fica na versão antiga e tenta de novo no próximo carregamento.
+- Depois da primeira visita, o jogo abre até sem internet.
+
+O menu da conta mostra o código da versão em uso.
+
+Para isso funcionar, `docs/sw.js` precisa listar a "impressão digital" de cada arquivo. Um gancho do git faz isso sozinho a cada commit. Ele já está ligado neste computador; numa cópia nova do repositório, ligue uma vez com:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+Para atualizar a lista à mão: `npm run versao`.
+
 ## Rodar no computador (opcional)
 
 Existe também um servidor próprio, que guarda as contas num banco de dados em vez de no navegador. Com ele, a mesma conta vale em todos os aparelhos ligados ao mesmo Wi-Fi. Precisa só do [Node.js](https://nodejs.org) 22.13 ou mais novo; não há nada para instalar.
@@ -70,5 +89,7 @@ As contas do servidor ficam em `data/jogo.db` (SQLite, senhas guardadas só como
   - `js/game.js` — o jogo (hangar, loja, janelas)
   - `js/backend-local.js` — contas guardadas no aparelho
   - `js/transfer.js` — código de transferência
+  - `sw.js` e `js/atualiza.js` — versão guardada no aparelho e troca de versão no carregamento
   - `js/backend-server.js` e `js/modo.js` — contas no servidor local, quando ele é usado
+- `tools/versao.js` e `.githooks/` — atualizam a lista de arquivos em `docs/sw.js` a cada commit
 - `server.js` — servidor local (opcional)

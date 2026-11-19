@@ -7,6 +7,7 @@ import {
 import { planeURL } from './planes.js';
 import { api } from './api.js';
 import { makeCode, readCode } from './transfer.js';
+import { currentVersion } from './atualiza.js';
 import { sfx, isMuted, setMuted } from './audio.js';
 import { Sky } from './sky.js';
 
@@ -710,6 +711,8 @@ function toggleSound() {
 function openAccount() {
   const stat = (label, value) => h('div', { class: 'stat' }, h('span', { text: label }), h('b', { text: value }));
   const soundBtn = h('button', { class: 'btn ghost', onclick: () => { toggleSound(); soundBtn.textContent = soundLabel(); } }, soundLabel());
+  const versionEl = h('p', { class: 'version' });
+  currentVersion().then((v) => { if (v) versionEl.textContent = 'Versão ' + v; });
   const m = openModal({
     title: `Olá, ${user.name}!`,
     content: h('div', { class: 'menu' },
@@ -728,7 +731,8 @@ function openAccount() {
           try { await api.logout(); } catch { /* sai mesmo assim */ }
           location.reload();
         },
-      }, '🚪 Sair da conta')),
+      }, '🚪 Sair da conta'),
+      versionEl),
   });
 }
 

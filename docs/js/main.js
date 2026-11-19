@@ -1,5 +1,6 @@
 // Entrada do site: tela de login/cadastro e início do jogo.
 import { api } from './api.js';
+import { freshVersion } from './atualiza.js';
 import { startGame } from './game.js';
 import { planeSprite } from './planes.js';
 
@@ -82,6 +83,7 @@ $('auth-form').addEventListener('submit', async (e) => {
 });
 
 (async function boot() {
+  await freshVersion(); // se houver versão nova, troca agora (antes de o jogo começar)
   let user = null;
   try {
     user = (await api.me()).user;

@@ -5,7 +5,8 @@
   "description": "Airplane Merge do Alex — jogo de fundir aviões, com contas, para computador e celular.",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "versao": "node tools/versao.js"
   },
   "engines": {
     "node": ">=22.13"

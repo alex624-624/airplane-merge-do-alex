@@ -1,4 +1,4 @@
-// Desenho dos 40 aviões (vistos de cima, nariz para o alto), tudo feito em canvas.
+// Desenho dos 100 aviões (vistos de cima, nariz para o alto), tudo feito em canvas.
 import { MAX_LEVEL } from './config.js';
 
 const OUT = '#1d2440';
@@ -55,6 +55,78 @@ const PAL = [
   ['#efe9ff', '#cdbcff', '#b85cff'],
   ['#fff5d6', '#ffd36a', '#ff4f6d'],
   ['#fff1b8', '#ffcf3d', '#7a5cff'],
+  // Foguetes — [corpo, aletas, ponta]
+  ['#f7f9fc', '#e2452f', '#e2452f'],
+  ['#ffffff', '#2f7fe0', '#ffb02e'],
+  ['#ffe9a8', '#3d4a6b', '#ff7a3d'],
+  ['#e9eef6', '#1fa870', '#22304f'],
+  ['#ffffff', '#22304f', '#f5b92e'],
+  // Discos voadores — [disco, cúpula, luzes]
+  ['#b9c7d6', '#7d8fa8', '#7dff8a'],
+  ['#9fd8c8', '#4f9d8c', '#fff06a'],
+  ['#c9b8f5', '#7a5cff', '#5af0ff'],
+  ['#8fa3b8', '#3a3f58', '#ff5d73'],
+  ['#f0d58a', '#c9952e', '#ff4fd8'],
+  // Drones — [corpo, braços, detalhes]
+  ['#f4f6fa', '#5b6b8c', '#ff5d3d'],
+  ['#ffd447', '#3a3f58', '#2f7fe0'],
+  ['#35c2a1', '#22304f', '#fff06a'],
+  ['#3a3f58', '#8a93a8', '#58e6d9'],
+  ['#e2452f', '#22304f', '#ffffff'],
+  // Arraias — [corpo, barriga, pintas]
+  ['#4aa3ff', '#d9efff', '#ffffff'],
+  ['#2bb7a8', '#d4fff5', '#fff06a'],
+  ['#5b6ee0', '#dfe4ff', '#ffb347'],
+  ['#2a3d8f', '#9fb4ff', '#58e6d9'],
+  ['#7a4be0', '#ead9ff', '#ffd34d'],
+  // Fogo — caças em chamas
+  ['#e2452f', '#ffb02e', '#ffe14a'],
+  ['#ff7a1a', '#ffd34d', '#fff6c2'],
+  ['#b3261e', '#ff7a3d', '#ffd34d'],
+  ['#3a2030', '#ff5d3d', '#ffb02e'],
+  ['#1d1a22', '#ff3d2e', '#ffe14a'],
+  // Gelo — asas voadoras congeladas
+  ['#dff4ff', '#a8dcf5', '#3aa8e0'],
+  ['#bfe9ff', '#ffffff', '#2f7fe0'],
+  ['#8fd3f5', '#e9f8ff', '#ffffff'],
+  ['#5aa7e0', '#d9f1ff', '#b8f5ff'],
+  ['#f2fbff', '#9bdcff', '#7a5cff'],
+  // Neon — drones luminosos
+  ['#1a1f38', '#2f3660', '#39ff88'],
+  ['#1a1f38', '#3a2a5c', '#ff3df2'],
+  ['#141a2e', '#27406a', '#3df2ff'],
+  ['#20142e', '#4a2a6a', '#fff23d'],
+  ['#0f1220', '#3a1f4f', '#ff5a3d'],
+  // Ouro — jatos dourados
+  ['#ffe9a8', '#f5c542', '#c9952e'],
+  ['#ffd76a', '#ffe9a8', '#b8791a'],
+  ['#fff4cf', '#f5b92e', '#e2452f'],
+  ['#f5c542', '#fff1b8', '#7a4a12'],
+  ['#ffd84a', '#fff6d6', '#7a5cff'],
+  // Cristais — discos de pedras preciosas
+  ['#fbe4ee', '#f0b8cf', '#ffffff'],
+  ['#c9a8f5', '#8a4be0', '#f3e6ff'],
+  ['#8fb8ff', '#2f5fe0', '#e3f0ff'],
+  ['#8ff0bf', '#1fa870', '#e6fff3'],
+  ['#eafcff', '#9be7ff', '#ff9bf0'],
+  // Arco-íris — arraias coloridas
+  ['#9bd0ff', '#ffffff', '#ffe14a'],
+  ['#ff9bd0', '#fff0f8', '#58e6d9'],
+  ['#b8f58f', '#fbffe8', '#ff7a59'],
+  ['#ffd27a', '#fff8e0', '#7a5cff'],
+  ['#ffffff', '#ffe6f7', '#ff4fd8'],
+  // Galácticos — foguetes do espaço profundo
+  ['#2a2f5c', '#7a5cff', '#58e6d9'],
+  ['#1f2550', '#ff4fd8', '#ffe14a'],
+  ['#3a2a6a', '#35d7ff', '#ffffff'],
+  ['#18183a', '#b85cff', '#ff7a3d'],
+  ['#0f1030', '#ffd34d', '#5af0ff'],
+  // Lendas — naves lendárias
+  ['#ffffff', '#e3ecf7', '#ffd34d'],
+  ['#fff5d6', '#ffcf3d', '#ff7a3d'],
+  ['#f4f7fb', '#b8f5ff', '#35d7ff'],
+  ['#fff1b8', '#ff9bf0', '#b85cff'],
+  ['#fffbe8', '#ffd84a', '#ff4f6d'],
 ];
 
 // ------------------------------------------------------------ ajudantes de desenho
@@ -203,7 +275,7 @@ function sparkle(ctx, x, y, r) {
   ctx.fill();
 }
 
-// ------------------------------------------------------------ os 8 tipos de avião
+// ------------------------------------------------------------ os tipos de avião
 // 1) aviõezinhos a hélice
 function t1(ctx, v, [p, s, a]) {
   const span = 36 + v * 2;
@@ -537,7 +609,328 @@ function t8(ctx, v, [p, s, a]) {
   if (v >= 3) { sparkle(ctx, 26, -34, 3.4); sparkle(ctx, -38, 6, 2.6); }
 }
 
-const DRAW = [t1, t2, t3, t4, t5, t6, t7, t8];
+// 9) foguetes
+function t9(ctx, v, [p, s, a]) {
+  const B = () => body(ctx, -48, 30, 9.5, 30, 0.2, 6, 7.5);
+  flame(ctx, 0, 30, 5.5, 16 + v * 2, '#fff6c2', '#ff7a2b');
+  if (v >= 2) both(ctx, () => flame(ctx, 15.5, 27, 2.6, 10 + v, '#fff6c2', '#ff7a2b'));
+  sym(ctx, [[0, 6], [9, 6], [24 + v, 28], [24 + v, 37], [9, 31], [0, 31]]);
+  paint(ctx, s);
+  both(ctx, () => {
+    poly(ctx, [[18 + v, 21.5], [24 + v, 28], [24 + v, 37], [19 + v, 35.2]]);
+    paint(ctx, a, 1.6);
+  });
+  if (v >= 2) both(ctx, () => {
+    rrect(ctx, 12, -6, 7, 34, 3.4);
+    paint(ctx, s);
+    poly(ctx, [[12, -4.5], [15.5, -13], [19, -4.5]]);
+    paint(ctx, a, 1.6);
+    ctx.fillStyle = a;
+    ctx.fillRect(13.1, 8, 4.8, 2.6);
+  });
+  B();
+  paint(ctx, p);
+  inside(ctx, B, () => {
+    ctx.fillStyle = a;
+    ctx.fillRect(-12, -50, 24, 15);
+    ctx.fillRect(-12, 8, 24, 3.2);
+    if (v >= 1) ctx.fillRect(-12, 14, 24, 2.2);
+    if (v >= 3) { ctx.fillStyle = s; ctx.fillRect(-12, -9.5, 24, 3); }
+  });
+  outline(ctx, B);
+  ell(ctx, 0, -20, 4.6, 4.6);
+  paint(ctx, GLASS, 1.6);
+  ell(ctx, -1.4, -21.4, 1.3, 1.3);
+  ctx.fillStyle = 'rgba(255,255,255,.85)';
+  ctx.fill();
+  if (v >= 1) { ell(ctx, 0, -2, 3, 3); paint(ctx, GLASS, 1.4); }
+  fin(ctx, 17, 30, a);
+  rrect(ctx, -5, 28.6, 10, 4, 1.4);
+  paint(ctx, '#3a4055', 1.3);
+  if (v === 4) { sparkle(ctx, -30, -24, 4); sparkle(ctx, 32, -6, 3.2); }
+}
+
+// 10) discos voadores
+function t10(ctx, v, [p, s, a]) {
+  const R = 36 + v;
+  const k = 0.92;
+  const g = ctx.createRadialGradient(0, 4, 8, 0, 4, R + 14);
+  g.addColorStop(0, a);
+  g.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.globalAlpha = 0.35;
+  ctx.fillStyle = g;
+  ctx.fillRect(-54, -54, 108, 108);
+  ctx.globalAlpha = 1;
+  if (v >= 3) both(ctx, () => flame(ctx, 11.5, R * k - 3, 3, 13, '#ffffff', a));
+  ell(ctx, 0, 0, R, R * k);
+  paint(ctx, p);
+  ell(ctx, 0, 0, R - 7.5, (R - 7.5) * k);
+  paint(ctx, shade(p, -0.14), 1.4);
+  if (v >= 2) {
+    ell(ctx, 0, 0, R - 14, (R - 14) * k);
+    ctx.lineWidth = 2.2;
+    ctx.strokeStyle = s;
+    ctx.stroke();
+  }
+  const n = 8 + v * 2;
+  for (let i = 0; i < n; i++) {
+    const ang = (i / n) * Math.PI * 2 - Math.PI / 2 + Math.PI / n;
+    ell(ctx, Math.cos(ang) * (R - 3.8), Math.sin(ang) * (R - 3.8) * k, 2.1, 2.1);
+    paint(ctx, i % 2 ? a : s, 1);
+  }
+  poly(ctx, [[0, -R * k + 9], [4.2, -R * k + 16], [-4.2, -R * k + 16]]);
+  paint(ctx, a, 1.3);
+  ell(ctx, 0, 1, 13.5, 13);
+  paint(ctx, s);
+  ell(ctx, 0, 1, 9.8, 9.3);
+  paint(ctx, GLASS, 1.5);
+  ell(ctx, -3, -2.6, 2.6, 3.6);
+  ctx.fillStyle = 'rgba(255,255,255,.75)';
+  ctx.fill();
+  if (v >= 1) both(ctx, () => { ell(ctx, 3.2, 2.6, 1.5, 2.1); ctx.fillStyle = OUT; ctx.fill(); });
+  if (v === 4) { star(ctx, 0, 18.5, 3.6); paint(ctx, a, 1); }
+}
+
+// 11) drones
+function t11(ctx, v, [p, s, a]) {
+  const arms = v >= 3 ? [[29, -27], [29, 27], [40, 0]] : [[30, -26], [30, 26]];
+  const rr = v >= 3 ? 11 : 13;
+  both(ctx, () => arms.forEach(([x, y]) => {
+    ctx.beginPath();
+    ctx.moveTo(5, y * 0.3);
+    ctx.lineTo(x, y);
+    ctx.lineWidth = 6.6;
+    ctx.strokeStyle = OUT;
+    ctx.stroke();
+    ctx.lineWidth = 3.6;
+    ctx.strokeStyle = s;
+    ctx.stroke();
+  }));
+  if (v >= 4) {
+    ctx.beginPath();
+    ctx.moveTo(0, 18);
+    ctx.lineTo(0, 31);
+    ctx.lineWidth = 3.6;
+    ctx.strokeStyle = OUT;
+    ctx.stroke();
+    ell(ctx, 0, 32, 2.6, 2.6);
+    paint(ctx, a, 1.3);
+  }
+  const B = () => rrect(ctx, -11, -19, 22, 38, 9);
+  B();
+  paint(ctx, p);
+  inside(ctx, B, () => {
+    ctx.fillStyle = a;
+    ctx.fillRect(-12, 5, 24, 3.4);
+    if (v >= 1) ctx.fillRect(-12, 10.5, 24, 2.2);
+    if (v >= 2) { ctx.fillStyle = s; ctx.fillRect(-1.5, -4, 3, 30); }
+  });
+  outline(ctx, B);
+  ell(ctx, 0, -10.5, 5.2, 5.2);
+  paint(ctx, '#2a3150', 1.5);
+  ell(ctx, 0, -10.5, 2.8, 2.8);
+  paint(ctx, GLASS, 1);
+  ell(ctx, -0.9, -11.4, 0.9, 0.9);
+  ctx.fillStyle = '#fff';
+  ctx.fill();
+  both(ctx, () => { ell(ctx, 6.3, 14.6, 1.6, 1.6); paint(ctx, a, 0.9); });
+  both(ctx, () => arms.forEach(([x, y]) => {
+    ell(ctx, x, y, 4.6, 4.6);
+    paint(ctx, s, 1.5);
+    ell(ctx, x, y, rr, rr);
+    ctx.fillStyle = 'rgba(255,255,255,.5)';
+    ctx.fill();
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = 'rgba(29,36,64,.45)';
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x - rr * 0.88, y - rr * 0.3);
+    ctx.lineTo(x + rr * 0.88, y + rr * 0.3);
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = 'rgba(29,36,64,.5)';
+    ctx.stroke();
+    ell(ctx, x, y, 1.9, 1.9);
+    ctx.fillStyle = a;
+    ctx.fill();
+  }));
+}
+
+// 12) arraias
+function mantaPath(ctx, w) {
+  ctx.beginPath();
+  ctx.moveTo(0, -38);
+  ctx.bezierCurveTo(8, -38, 20, -24, w, -2);
+  ctx.bezierCurveTo(w - 8, 10, 24, 10, 10, 22);
+  ctx.quadraticCurveTo(3, 27, 1.6, 47);
+  ctx.lineTo(-1.6, 47);
+  ctx.quadraticCurveTo(-3, 27, -10, 22);
+  ctx.bezierCurveTo(-24, 10, -(w - 8), 10, -w, -2);
+  ctx.bezierCurveTo(-20, -24, -8, -38, 0, -38);
+  ctx.closePath();
+}
+
+function t12(ctx, v, [p, s, a]) {
+  const w = 42 + v;
+  const M = () => mantaPath(ctx, w);
+  flame(ctx, 0, 28, 3.4, 22 + v * 1.5, '#ffffff', a);
+  both(ctx, () => { rrect(ctx, 3.6, -46, 4.6, 12, 2.3); paint(ctx, p); });
+  M();
+  paint(ctx, p);
+  inside(ctx, M, () => {
+    ell(ctx, 0, -9, 9, 25);
+    ctx.fillStyle = s;
+    ctx.fill();
+    const spots = [[22, -6, 2.6], [30, -2.5, 2], [16, 4, 1.9], [34.5, 2.5, 1.5], [24, 4.5, 1.4]];
+    both(ctx, () => spots.slice(0, 2 + Math.min(v, 3)).forEach(([x, y, r]) => {
+      ell(ctx, x, y, r, r);
+      ctx.fillStyle = a;
+      ctx.fill();
+    }));
+    if (v >= 2) both(ctx, () => { ctx.fillStyle = a; ctx.fillRect(w - 6, -14, 10, 28); });
+  });
+  outline(ctx, M);
+  ctx.beginPath();
+  ctx.moveTo(0, -12);
+  ctx.lineTo(0, 22);
+  ctx.lineWidth = 1.6;
+  ctx.strokeStyle = shade(p, -0.3);
+  ctx.stroke();
+  both(ctx, () => {
+    ell(ctx, 5.4, -28.5, 2.2, 2.7);
+    paint(ctx, '#ffffff', 1.2);
+    ell(ctx, 5.6, -29, 1, 1.4);
+    ctx.fillStyle = OUT;
+    ctx.fill();
+  });
+  if (v >= 3) both(ctx, () => { poly(ctx, [[1.4, 29], [7.5, 37], [1.4, 36]]); paint(ctx, a, 1.2); });
+  if (v === 4) { star(ctx, 0, -8, 4.6); paint(ctx, a, 1.1); }
+}
+
+// ------------------------------------------------------------ efeitos das famílias especiais
+const SPOTS = [[-34, -26], [36, -12], [28, -36], [-40, 8], [38, 22], [-26, 32], [-14, -44], [16, 42]];
+
+function glow(ctx, color, alpha, r = 52) {
+  const g = ctx.createRadialGradient(0, 0, 4, 0, 0, r);
+  g.addColorStop(0, color);
+  g.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.globalAlpha = alpha;
+  ctx.fillStyle = g;
+  ctx.fillRect(-54, -54, 108, 108);
+  ctx.globalAlpha = 1;
+}
+
+const sparkles = (ctx, n) => SPOTS.slice(0, n).forEach(([x, y], i) => sparkle(ctx, x, y, 3 + (i % 3)));
+
+const FX = {
+  fogo: {
+    under(ctx, v) {
+      glow(ctx, '#ff6a1a', 0.5);
+      [-15, -7.5, 0, 7.5, 15].forEach((x, i) => flame(ctx, x, 30 - Math.abs(x) * 0.3, 4, 15 + v * 1.5 + (i % 2) * 4, '#fff2a8', '#ff4d1f'));
+    },
+    over(ctx, v) {
+      SPOTS.slice(0, 2 + v).forEach(([x, y], i) => {
+        ell(ctx, x, y, 1.3 + (i % 2) * 0.7, 1.3 + (i % 2) * 0.7);
+        ctx.fillStyle = i % 2 ? '#ff8a2b' : '#ffd34d';
+        ctx.fill();
+      });
+    },
+  },
+  gelo: {
+    under(ctx) { glow(ctx, '#8fe3ff', 0.55); },
+    over(ctx, v) { sparkles(ctx, 3 + v); },
+  },
+  neon: {
+    under(ctx, v, [, , a]) {
+      glow(ctx, a, 0.45);
+      ell(ctx, 0, 0, 47, 47);
+      ctx.lineWidth = 1.8;
+      ctx.globalAlpha = 0.55;
+      ctx.strokeStyle = a;
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+    },
+    over(ctx, v) { if (v >= 3) sparkles(ctx, v - 1); },
+  },
+  ouro: {
+    under(ctx) { glow(ctx, '#ffd84a', 0.55); },
+    over(ctx, v) { sparkles(ctx, 2 + v); },
+  },
+  cristal: {
+    under(ctx, v, [, , a]) { glow(ctx, a, 0.4); },
+    over(ctx, v, [, s]) {
+      SPOTS.slice(0, 2 + v).forEach(([x, y]) => {
+        poly(ctx, [[x, y - 4], [x + 2.8, y], [x, y + 4], [x - 2.8, y]]);
+        paint(ctx, '#f4fdff', 1);
+        poly(ctx, [[x, y - 4], [x + 2.8, y], [x, y]]);
+        ctx.fillStyle = s;
+        ctx.globalAlpha = 0.6;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      });
+    },
+  },
+  arcoiris: {
+    under(ctx) {
+      glow(ctx, '#ffffff', 0.3);
+      ['#ff5d5d', '#ffa63d', '#ffe14a', '#5fdc6a', '#4aa3ff', '#a06bff'].forEach((c, i) => {
+        const g = ctx.createLinearGradient(0, 6, 0, 54);
+        g.addColorStop(0, c);
+        g.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.fillStyle = g;
+        ctx.fillRect(-13.5 + i * 4.5, 6, 4.5, 48);
+      });
+    },
+    over(ctx, v) { if (v >= 2) sparkles(ctx, v); },
+  },
+  galaxia: {
+    under(ctx, v, [, , a]) {
+      glow(ctx, '#7a4dff', 0.5);
+      ctx.lineWidth = 1.6;
+      ctx.strokeStyle = a;
+      ctx.globalAlpha = 0.8;
+      ell(ctx, 0, 2, 47, 15);
+      ctx.stroke();
+      if (v >= 2) {
+        ctx.save();
+        ctx.rotate(1);
+        ell(ctx, 0, 0, 47, 13);
+        ctx.stroke();
+        ctx.restore();
+      }
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = '#ffffff';
+      SPOTS.slice(0, 4 + v).forEach(([x, y], i) => { ell(ctx, x, y, 0.9 + (i % 2) * 0.5, 0.9 + (i % 2) * 0.5); ctx.fill(); });
+    },
+    over() {},
+  },
+  lenda: {
+    under(ctx) {
+      ctx.fillStyle = '#ffd84a';
+      ctx.globalAlpha = 0.22;
+      for (let i = 0; i < 12; i++) {
+        const a0 = (i / 12) * Math.PI * 2;
+        const a1 = a0 + Math.PI / 12;
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(Math.cos(a0) * 54, Math.sin(a0) * 54);
+        ctx.lineTo(Math.cos(a1) * 54, Math.sin(a1) * 54);
+        ctx.closePath();
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+      glow(ctx, '#fff3b0', 0.6);
+    },
+    over(ctx, v) { sparkles(ctx, 3 + v); },
+  },
+};
+
+// uma família a cada 5 níveis: [desenho, efeito]
+const KINDS = [
+  [t1], [t2], [t3], [t4], [t5], [t6], [t7], [t8],
+  [t9], [t10], [t11], [t12],
+  [t6, FX.fogo], [t7, FX.gelo], [t11, FX.neon], [t5, FX.ouro],
+  [t10, FX.cristal], [t12, FX.arcoiris], [t9, FX.galaxia], [t8, FX.lenda],
+];
 
 // ------------------------------------------------------------ cache de sprites
 const sprites = new Map();
@@ -555,7 +948,13 @@ export function planeSprite(level, size = 160) {
   ctx.scale(size / 108, size / 108);
   ctx.lineJoin = 'round';
   ctx.lineCap = 'round';
-  DRAW[Math.floor((level - 1) / 5)](ctx, (level - 1) % 5, PAL[level]);
+  const [draw, fx] = KINDS[Math.floor((level - 1) / 5)];
+  const v = (level - 1) % 5;
+  const pal = PAL[level];
+  const layer = (fn) => { ctx.save(); fn(ctx, v, pal); ctx.restore(); };
+  if (fx) layer(fx.under);
+  layer(draw);
+  if (fx) layer(fx.over);
   sprites.set(key, c);
   return c;
 }

@@ -1,0 +1,4 @@
+#!/bin/sh
+# Antes de cada commit, atualiza a versão do jogo guardada em docs/sw.js,
+# usando exatamente os arquivos que vão entrar no commit.
+node tools/versao.js --staged && git add docs/sw.js

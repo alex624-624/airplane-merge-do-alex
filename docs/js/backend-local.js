@@ -94,7 +94,7 @@ function store(epoch, save) {
   return { ok: true, now: account.savedAt };
 }
 
-const rankOf = (a) => ({ name: a.name, best: Math.round(Number(a.save.best)) || 1, total: Number(a.save.total) || 0 });
+const rankOf = (a) => ({ name: a.name, best: Math.round(Number(a.save && a.save.best)) || 1, total: Number(a.save && a.save.total) || 0 });
 
 export const localApi = {
   local: true,
@@ -157,7 +157,7 @@ export const localApi = {
   // ranking entre as contas deste aparelho
   async ranking() {
     const { account } = signedIn();
-    const rows = everyone().filter((a) => a.save).map(rankOf)
+    const rows = everyone().map(rankOf) // todas as contas deste aparelho, mesmo as que mal jogaram
       .sort((a, b) => b.best - a.best || b.total - a.total || a.name.localeCompare(b.name));
     const i = rows.findIndex((r) => r.name === account.name);
     return { top: rows.slice(0, 20), me: i >= 0 ? { ...rows[i], rank: i + 1 } : null };
