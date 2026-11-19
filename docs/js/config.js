@@ -51,13 +51,13 @@ export const BOOST_MS = 60_000;
 export const BOOST_COOLDOWN_MS = 180_000;
 
 export const UPGRADES = [
-  { id: 'income', icon: '🚀', name: 'Motores turbinados', max: 30, cost: (n) => 500 * 2.4 ** n,
+  { id: 'income', icon: '🚀', name: 'Motores turbinados', max: 100, cost: (n) => 500 * 2.4 ** n,
     label: 'Moedas por volta', val: (n) => `+${n * 10}%` },
-  { id: 'discount', icon: '🏷️', name: 'Desconto na loja', max: 10, cost: (n) => 1500 * 3.2 ** n,
+  { id: 'discount', icon: '🏷️', name: 'Desconto na loja', max: 30, cost: (n) => 1500 * 3.2 ** n,
     label: 'Preço dos aviões', val: (n) => `-${n * 2}%` },
-  { id: 'crate', icon: '🎁', name: 'Entrega expressa', max: 5, cost: (n) => 4000 * 4 ** n,
+  { id: 'crate', icon: '🎁', name: 'Entrega expressa', max: 10, cost: (n) => 4000 * 4 ** n,
     label: 'Presente a cada', val: (n) => `${crateInterval(n)}s` },
-  { id: 'offline', icon: '🌙', name: 'Piloto automático', max: 10, cost: (n) => 2500 * 3 ** n,
+  { id: 'offline', icon: '🌙', name: 'Piloto automático', max: 22, cost: (n) => 2500 * 3 ** n,
     label: 'Ganhos fora do jogo', val: (n) => `até ${2 + n}h` },
 ];
 

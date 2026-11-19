@@ -12,7 +12,7 @@ Funciona no navegador do computador e do celular, com conta (usuário e senha).
 - **Decolar**: toque num avião, ou arraste-o até o céu. Cada volta completa rende moedas.
 - **Juntar**: arraste um avião sobre outro igual.
 - **Pousar**: toque num avião que está "em voo".
-- **Vender**: arraste o avião até o botão de baixo.
+- **Apagar**: toque na lixeira (ao lado do botão verde) e depois no avião, ou arraste o avião até ela. Você recebe parte das moedas de volta.
 - **Presentes**: caem no hangar de tempos em tempos; toque para abrir.
 - **Turbo**: moedas em dobro por 1 minuto.
 - No computador, a barra de espaço (ou a tecla B) também compra.

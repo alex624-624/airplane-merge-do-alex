@@ -388,8 +388,7 @@ body.can-launch .drop-hint { display: flex; }
 .actions { position: relative; flex: 0 0 auto; height: 64px; }
 .buy-btn {
   position: absolute;
-  inset: 0 0 4px;
-  width: 100%;
+  inset: 0 62px 4px 0;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -682,3 +681,46 @@ body.dragging .buy-btn { visibility: hidden; }
 .version { margin: 2px 0 0; text-align: center; font-size: 11px; font-weight: 700; color: var(--ink-soft); opacity: .7; min-height: 14px; }
 .album .cname { overflow-wrap: anywhere; }
 .muted.small { margin: 0 0 4px; font-size: 12px; }
+
+/* ---------- apagar aviões ---------- */
+.del-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 4px;
+  width: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 18px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 24px;
+  font-weight: 900;
+  box-shadow: 0 4px 0 var(--sand-d);
+  transition: transform 0.06s, box-shadow 0.06s;
+}
+.del-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--sand-d); }
+body.deleting .del-btn { background: var(--danger); color: #fff; box-shadow: 0 4px 0 var(--danger-d); }
+.delete-bar {
+  position: absolute;
+  inset: 0 62px 4px 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+  border: 3px dashed var(--danger);
+  border-radius: 18px;
+  background: #ffe9e6;
+  color: var(--danger-d);
+  font-weight: 900;
+  font-size: 15px;
+  line-height: 1.15;
+  text-align: center;
+}
+body.deleting .delete-bar { display: flex; }
+body.deleting .buy-btn { visibility: hidden; }
+body.dragging .del-btn, body.dragging .delete-bar { display: none; }
+body.deleting .slot.has-plane { box-shadow: 0 0 0 3px var(--danger); animation: wiggle 0.5s ease-in-out infinite alternate; }
+@keyframes wiggle { from { transform: rotate(-1.2deg); } to { transform: rotate(1.2deg); } }
+@media (prefers-reduced-motion: reduce) { body.deleting .slot.has-plane { animation: none; } }

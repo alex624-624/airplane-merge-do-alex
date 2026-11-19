@@ -53,6 +53,7 @@ let lastT = 0;
 let lastCoins = '';
 let buyShown = 0;
 let drag = null;
+let deleting = false;  // modo "apagar": tocar num avião apaga em vez de decolar
 const slotEls = [];
 const refreshers = new Set();
 const modals = [];
@@ -116,7 +117,7 @@ function normalize(save) {
       if (n) s.bought[L] = n;
     }
   }
-  for (const k of Object.keys(s.up)) s.up[k] = clampInt(save.up && save.up[k], 0, 100);
+  for (const u of UPGRADES) s.up[u.id] = clampInt(save.up && save.up[u.id], 0, u.max);
   s.boostUntil = +save.boostUntil || 0;
   s.boostReady = +save.boostReady || 0;
   s.tut = !!save.tut;
@@ -388,7 +389,7 @@ function sell(i, confirmed) {
   const p = S.slots[i];
   if (!p || p.c) return;
   if (!confirmed && p.l >= 3 && p.l >= S.best - 1) {
-    confirmDialog(`Vender ${NAMES[p.l]}?`, `Esse é um dos seus melhores aviões. Você recebe ${fmt(sellValue(p.l))} moedas.`, 'Vender',
+    confirmDialog(`Apagar ${NAMES[p.l]}?`, `Esse é um dos seus melhores aviões. Você recebe ${fmt(sellValue(p.l))} moedas de volta.`, 'Apagar',
       () => { if (S.slots[i] === p) sell(i, true); });
     return;
   }
@@ -396,7 +397,7 @@ function sell(i, confirmed) {
   renderSlot(i);
   addCoins(sellValue(p.l));
   sfx.sell();
-  toast(`Vendido por ${fmt(sellValue(p.l))} moedas`);
+  toast(`Avião apagado · +${fmt(sellValue(p.l))} moedas`);
   refreshSlow();
 }
 
@@ -475,10 +476,20 @@ function useBoost() {
 }
 
 // ------------------------------------------------------------------ arrastar e soltar
+function setDeleting(on) {
+  deleting = on;
+  document.body.classList.toggle('deleting', on);
+  const b = $('btn-delete');
+  b.textContent = on ? '✓' : '🗑️';
+  b.setAttribute('aria-pressed', String(on));
+  b.setAttribute('aria-label', on ? 'Parar de apagar' : 'Apagar aviões');
+}
+
 function tap(i) {
   const p = S.slots[i];
   if (!p) return;
   if (p.c) openCrate(i);
+  else if (deleting) sell(i);
   else if (p.f) recall(i);
   else launch(i);
 }
@@ -808,6 +819,7 @@ function showTutorial() {
     ['✈️', 'Decole', 'Toque num avião (ou arraste até o céu) para ele voar. Cada volta completa rende moedas!'],
     ['✨', 'Junte iguais', 'Arraste um avião para cima de outro igual: os dois viram um avião melhor.'],
     ['🎁', 'Presentes e turbo', 'Abra os presentes que caem no hangar e ligue o ⚡ Turbo para ganhar em dobro.'],
+    ['🗑️', 'Apague o que sobrar', 'Toque na lixeira e depois no avião que quer apagar (ou arraste o avião até ela). Você recebe moedas de volta.'],
   ];
   const m = openModal({
     title: 'Como jogar',
@@ -930,6 +942,7 @@ function frame() {
 function bindUI() {
   $('btn-buy').addEventListener('click', () => buy(bestBuy()));
   $('btn-boost').addEventListener('click', useBoost);
+  $('btn-delete').addEventListener('click', () => setDeleting(!deleting));
   $('btn-sound').addEventListener('click', toggleSound);
   $('btn-account').addEventListener('click', openAccount);
   const openers = { shop: openShop, upgrades: openUpgrades, album: openAlbum, ranking: openRanking };
@@ -939,6 +952,7 @@ function bindUI() {
     if (e.key === 'Escape') {
       const top = modals[modals.length - 1];
       if (top && top.dismissible) top.close();
+      else if (!top && deleting) setDeleting(false);
     } else if ((e.key === ' ' || e.key === 'b' || e.key === 'B') && !modals.length && !e.repeat) {
       const focused = document.activeElement && document.activeElement.tagName;
       if (e.key === ' ' && (focused === 'BUTTON' || focused === 'INPUT')) return;
